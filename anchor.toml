@@ -1,0 +1,10 @@
+[lcl-host]
+realm-apid = 'localhost'
+
+[org]
+apid = 'dhruvp132'
+
+[service]
+apid = 'muzique'
+category = 'javascript'
+cert-style = 'acme'

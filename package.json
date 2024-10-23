@@ -1,0 +1,50 @@
+{
+  "name": "muzique",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "deleteStreams": "ts-node prisma/seed/delete.ts",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "@radix-ui/react-slider": "^1.2.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.8.0",
+    "anchor-pki": "^0.3.2",
+    "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.9",
+    "lucide-react": "^0.445.0",
+    "next": "^14.2.15",
+    "next-auth": "^4.24.7",
+    "next-themes": "^0.3.0",
+    "nookies": "^2.5.2",
+    "prisma": "^5.19.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-lite-youtube-embed": "^2.4.0",
+    "react-router-dom": "^6.27.0",
+    "react-toastify": "^10.0.5",
+    "stripe": "^17.2.0",
+    "tailwind-merge": "^2.5.2",
+    "youtube-player": "^5.6.0",
+    "youtube-search-api": "^1.2.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.12",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.12",
+    "typescript": "^5"
+  }
+}

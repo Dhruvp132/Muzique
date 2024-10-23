@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "paid" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "songAdded" INTEGER DEFAULT 0,
+ADD COLUMN     "songLimit" INTEGER;
