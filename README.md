@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Muzique (2024) 🎶
+=================
 
-## Getting Started
+**Muzique** is a collaborative music streaming SaaS platform where users can join a live stream, add songs to a playlist, vote on tracks, and influence the queue in real-time. A "pay-to-play" feature integrated with Stripe allows users to prioritize songs, giving stream creators a monetization opportunity.
 
-First, run the development server:
+Technologies & Frameworks
+-------------------------
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-   **Frontend**: Next.js, Tailwind CSS
+-   **Backend**: Next.js API routes, Prisma ORM
+-   **Database**: PostgreSQL
+-   **Payment Processing**: Stripe
+-   **Programming Language**: TypeScript
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Demo Video
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[![Watch the demo video](https://via.placeholder.com/150)](https://drive.google.com/file/d/1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf/view?usp=drive_link)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Click the image above to watch a demonstration of Muzique's key features on Google Drive.
 
-## Learn More
+Features
+--------
 
-To learn more about Next.js, take a look at the following resources:
+-   **Collaborative Music Streaming**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    -   Users can join streams, add songs to a shared queue, and upvote/downvote tracks to influence the playlist in real-time.
+    -   Creator accounts allow control over streams and user interactions.
+-   **Pay-to-Play**:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    -   Stripe integration supports card payments, Google Pay, and Apple Pay, enabling users to prioritize their preferred songs in the queue by making a payment.
+    -   This monetization model adds interactivity and provides creators with a revenue stream.
 
-## Deploy on Vercel
+Installation
+------------
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1.  **Clone the repository**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    bash
+
+    Copy code
+
+    `git clone https://github.com/your-username/muzique.git
+    cd muzique`
+
+2.  **Install dependencies**:
+
+    bash
+
+    Copy code
+
+    `npm install`
+
+3.  **Set up environment variables**:
+
+    -   Configure PostgreSQL, Stripe API keys, and any other required settings in a `.env` file.
+4.  **Run database migrations**:
+
+    bash
+
+    Copy code
+
+    `npx prisma migrate dev`
+
+5.  **Start the application**:
+
+    bash
+
+    Copy code
+
+    `npm run dev`
+
+Project Highlights
+------------------
+
+-   **Real-Time Queue Management**: Users add songs to a queue and vote in real-time, influencing the next song.
+-   **Stripe Payment Integration**: Secure, multi-platform payments allow users to pay and prioritize songs.
+-   **Scalable Architecture**: Next.js and PostgreSQL provide high performance and smooth user interactions.
+
+Contributing
+------------
+
+We welcome contributions! Follow these steps:
+
+1.  **Fork the repository**.
+2.  **Create a feature branch**:
+
+    bash
+
+    Copy code
+
+    `git checkout -b feature/your-feature`
+
+3.  **Commit your changes**:
+
+    bash
+
+    Copy code
+
+    `git commit -m "Add your message"`
+
+4.  **Push to your branch**:
+
+    bash
+
+    Copy code
+
+    `git push origin feature/your-feature`
+
+5.  **Open a pull request**.
+
+License
+-------
+
+This project is licensed under the MIT License.
