@@ -14,9 +14,9 @@ Technologies & Frameworks
 
 ## Demo Video
 
-[![Watch the demo video](https://via.placeholder.com/150)](https://drive.google.com/file/d/1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf/view?usp=drive_link)
+<iframe src="https://drive.google.com/uc?id=1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf" width="640" height="360" allow="autoplay" frameborder="0"></iframe>
 
-> Click the image above to watch a demonstration of Muzique's key features on Google Drive.
+> Click the link to watch a demonstration of Muzique's key features on Google Drive: [Watch on Google Drive](https://drive.google.com/file/d/1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf/view?usp=drive_link).
 
 Features
 --------
