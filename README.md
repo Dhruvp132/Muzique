@@ -13,8 +13,8 @@ Technologies & Frameworks
 -   **Programming Language**: TypeScript
 
 ## Demo Video
-
-<iframe src="https://drive.google.com/uc?id=1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf" width="640" height="360" allow="autoplay" frameborder="0"></iframe>
+Video Link -> 
+[Watch on Google Drive](https://drive.google.com/file/d/1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf/view?usp=drive_link).
 
 > Click the link to watch a demonstration of Muzique's key features on Google Drive: [Watch on Google Drive](https://drive.google.com/file/d/1yyzFFe-qZ8xw1_UGXKmLfKlM94GJpFTf/view?usp=drive_link).
 
