@@ -38,7 +38,7 @@ interface Video {
 
 const REFRESH_INTERVAL_MS = 10 * 1000
 
-export default function EnhancedStreamView({ creatorId, playVideo = false }: { creatorId: string; playVideo: boolean }) {
+export default function EnhancedStreamView({ creatorId, playVideo = false }: { creatorId: string ; playVideo: boolean }) {
   const [inputLink, setInputLink] = useState('')
   const [queue, setQueue] = useState<Video[]>([])
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null)
@@ -48,6 +48,8 @@ export default function EnhancedStreamView({ creatorId, playVideo = false }: { c
   const { interrupt } = useInterrupt(); 
   
   async function refreshStreams() {
+    console.log("Refreshing streams..")
+    console.log("Creator ID: ", creatorId)
     const res = await fetch(`/api/streams/?creatorId=${creatorId}`, {
       credentials: "include"
     })
@@ -162,7 +164,11 @@ export default function EnhancedStreamView({ creatorId, playVideo = false }: { c
   }
 
   const handleShare = () => {
-    const shareableLink = `${window.location.hostname}/creator/${creatorId}`
+    const shareableLink = creatorId
+    // if(shareableLink === undefined) shareableLink = creatorId
+    // store that sharable link in the clipboard
+    // shareableLink.split("/").pop()
+    console.log(shareableLink)
     navigator.clipboard.writeText(shareableLink).then(() => {
       toast.success('Link copied to clipboard!', {
         position: "top-right",

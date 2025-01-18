@@ -7,7 +7,7 @@ import GoogleProvider from "next-auth/providers/google";
 // Define interface for customized session type
 interface CustomSession extends Session {
   user: {
-    id?: string;
+    id: string;
     email: string;
   };
 }
@@ -15,6 +15,7 @@ interface CustomSession extends Session {
 // Define interface for customized JWT type
 interface CustomToken extends JWT {
   email?: string;
+  id? : string; 
 }
 
 export const authOptions: NextAuthOptions = {
@@ -31,12 +32,21 @@ export const authOptions: NextAuthOptions = {
       if (!user.email) return false;
 
       try {
-        await prismaClient.user.create({
-          data: {
+        let existingOrNewUser = await prismaClient.user.findUnique({
+          where: {
             email: user.email,
-            provider: "Google",
           },
         });
+        if(!existingOrNewUser) {
+          existingOrNewUser = await prismaClient.user.create({
+            data: {
+              email: user.email,
+              provider: "Google",
+            },
+          });
+        }
+        //user.id is differnt than the user id in the model User
+        user.id = existingOrNewUser?.id ?? "" 
       } catch (e) {
         console.log(e);
         return false;
@@ -47,16 +57,28 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user }) {
       const customToken: CustomToken = token as CustomToken;
-      if (user && user.email) {
+      if (user && user.email && user.id) {
         customToken.email = user.email;
+        customToken.id = user.id 
       }
       return customToken;
     },
 
+    // the defautl token is the JWT token and that doesn't have the id in that so check the custom Token 
+    // async session({ session, token }) {
+    //   const customSession: CustomSession = session as CustomSession;
+    //   if (token?.email && customSession.user && token?.id) {
+    //     customSession.user.email = token.email;
+    //     customSession.user.id = token.id
+    //   }
+    //   return customSession;
+    // },
     async session({ session, token }) {
       const customSession: CustomSession = session as CustomSession;
-      if (token?.email && customSession.user) {
-        customSession.user.email = token.email;
+      const customToken: CustomToken = token as CustomToken;
+      if (customToken?.email && customSession.user && customToken?.id) {
+        customSession.user.email = customToken.email;
+        customSession.user.id = customToken.id
       }
       return customSession;
     },

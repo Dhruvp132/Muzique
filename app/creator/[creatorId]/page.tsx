@@ -1,17 +1,13 @@
+"use client"
+import { creatorState } from "@/app/atom";
+import EnhancedStreamViewCreator from "@/app/components/StreamViewCreator";
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import StreamView from "@/app/components/StreamView";
+import { useRecoilValue } from "recoil";
 
-export default function Creator({
-    params : {
-        creatorId
-    }
-} : {
-    params : {
-        creatorId : string;
-    }
-}) {
+export default function Creator(){
+    const creatorId = useRecoilValue(creatorState);
 
     return <div>
-        <StreamView creatorId={"093cbe9e-9335-4602-a61f-3d570db27147"} playVideo={false}/>
+        <EnhancedStreamViewCreator creatorId={creatorId} playVideo={false}/>
     </div> 
 }

@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
 
     if (!creatorId) {
         return NextResponse.json({
-            message: "Error"
+            message: "Error creator Id not found"
         }, {
             status: 411
         })

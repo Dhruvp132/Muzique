@@ -11,14 +11,15 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useTheme } from "@/app/contexts/ThemeContext"
 import { getSession } from 'next-auth/react'
 import { useCreator, useUserCreator } from './contexts/CreatorContext'
-
+import { useRecoilState } from 'recoil'
+import { creatorState } from './atom'
 
 export default function Home() {
   const {setCreator} = useCreator(); 
   const {setUserCreator} = useUserCreator(); 
   const { theme, toggleTheme } = useTheme()
   const [showCreatorInput, setShowCreatorInput] = useState(false)
-  const [creatorId, setCreatorId] = useState('')
+  const [creatorId, setCreatorId] = useRecoilState(creatorState)
   const router = useRouter()
   const { scrollYProgress } = useScroll()
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 0])
@@ -40,7 +41,8 @@ export default function Home() {
     }
   }
 
-  const handleJoinStream = () => {
+  const handleJoinStream = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setCreatorId((e.target as HTMLButtonElement).value)
     setShowCreatorInput(true)
   }
 

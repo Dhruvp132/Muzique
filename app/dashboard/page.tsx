@@ -1,21 +1,42 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css'
 import StreamView from "../components/StreamView"
-// import { useCreator } from '../contexts/CreatorContext'
-// import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getSession } from 'next-auth/react';
+import NextAuth from "next-auth"
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+    }
+  }
+}
 
 export default function Component() {
-  // const {creator, setCreator} = useCreator(); 
+  //to get the id in the frontend we are using the getSession 
+  const [creatorId, setCreatorId] = useState<string >("");
 
-  // useEffect(()=> {
-  //     const res = await fetch("/streams/my", {
-  //       method : "GET", 
-  //       credentials : 'include',
-  //     })
-  //     const json = await res.json(); 
-  //     setCreator(json.id);
-  // }, [])
+  useEffect(() => {
+    // Fetch the session on component mount
+    const fetchSession = async () => {
+      const session = await getSession();
+      if (session && session.user) {  
+        setCreatorId(session?.user?.id || ""); 
+      }
+    };
+
+    fetchSession();
+  }, []);
+
+  if(!creatorId) return <div>Loading...</div>
+  //if there is no loader present then what will happen is that 
+  // the page will be empty until the creatorId is fetched
   return <main>
-      <StreamView creatorId = {"093cbe9e-9335-4602-a61f-3d570db27147"} playVideo = {true}/>
+      <StreamView creatorId = {creatorId} playVideo = {true}/>
     </main>
 }

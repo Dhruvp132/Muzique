@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ThemeProvider } from '@/app/contexts/ThemeContext'
-import { Providers } from "./provider";
-import { Appbar } from "./components/Appbar";
-import { AmountProvider } from "./contexts/AmountContext";
-import { InterruptProvider } from "./contexts/InterruptContext";
-import { CreatorProvider, UserCreatorProvider } from "./contexts/CreatorContext";
+import React from 'react';
+import ClientLayout from "./ClientLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,20 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-        <AmountProvider>
-          <CreatorProvider>
-          <UserCreatorProvider>
-        <ThemeProvider>
-        <InterruptProvider>
-        <Appbar />
-          {children}
-        </InterruptProvider>
-        </ThemeProvider>
-        </UserCreatorProvider>
-        </CreatorProvider>
-        </AmountProvider>
-        </Providers>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
