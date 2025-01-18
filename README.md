@@ -1,7 +1,7 @@
-Muzique (2024) 🎶
+[Muzique](https://muzique.vercel.app/) 🎶
 =================
 
-**Muzique** is a collaborative music streaming SaaS platform where users can join a live stream, add songs to a playlist, vote on tracks, and influence the queue in real-time. A "pay-to-play" feature integrated with Stripe allows users to prioritize songs, giving stream creators a monetization opportunity.
+**[Muzique](https://muzique.vercel.app/).** is a collaborative music streaming SaaS platform where users can join a live stream, add songs to a playlist, vote on tracks, and influence the queue in real-time. A "pay-to-play" feature integrated with Stripe allows users to prioritize songs, giving stream creators a monetization opportunity.
 
 Technologies & Frameworks
 -------------------------
@@ -11,6 +11,9 @@ Technologies & Frameworks
 -   **Database**: PostgreSQL
 -   **Payment Processing**: Stripe
 -   **Programming Language**: TypeScript
+
+
+## Explore Now! -> Live - [Muzique](https://muzique.vercel.app/)
 
 ## Demo Video
 Video Link -> 
