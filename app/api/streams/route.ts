@@ -32,8 +32,11 @@ export async function POST(req: NextRequest) {
         const extractedId = data.url.split("?v=")[1];
         //TODO : add only if stream is not present? optional
         const res = await youtubesearchapi.GetVideoDetails(extractedId);
-
-        const thumbnails = res.thumbnail.thumbnails;
+        console.log(res); 
+        console.log("===========")
+        console.log(res.thumbnail);
+        const thumbnails = await res.thumbnail.thumbnails;
+        console.log(thumbnails);
         thumbnails.sort((a: {width: number}, b: {width: number}) => a.width < b.width ? -1 : 1);
 
         console.log("user - 1")
