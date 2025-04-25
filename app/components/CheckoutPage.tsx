@@ -47,7 +47,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `https://muzique.lcl.host:44377/payment-success?amount=${amount}`,
+        return_url: `${process.env.NEXTAUTH_URL}/payment-success?amount=${amount}`,
       },
     });
 
