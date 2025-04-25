@@ -31,6 +31,11 @@ export async function POST(req: NextRequest) {
         }
 
         const extractedId = data.url.split("?v=")[1];
+
+        let videoTitle = "Unknown Video";
+        let smallImgUrl = `https://img.youtube.com/vi/${extractedId}/hqdefault.jpg`;
+        let bigImgUrl = `https://img.youtube.com/vi/${extractedId}/maxresdefault.jpg`;
+        
         //TODO : add only if stream is not present? optional
         // const res = await youtubesearchapi.GetVideoDetails(extractedId);
         // console.log(res); 
@@ -43,15 +48,36 @@ export async function POST(req: NextRequest) {
 
         //using youtubei for gettiing the video deatils 
          // safer extraction via regex
-        const youtube = new Client();               // initialize InnerTube
-        const video = await youtube.getVideo(extractedId);  // fetch details :contentReference[oaicite:3]{index=3}
+        // const youtube = new Client();               // initialize InnerTube
+        // const video = await youtube.getVideo(extractedId);  // fetch details :contentReference[oaicite:3]{index=3}
 
-        // sort thumbnails by width ascending
-        if (!video) {
-            throw new Error("Failed to fetch video details");
+        // // sort thumbnails by width ascending
+        // if (!video) {
+        //     throw new Error("Failed to fetch video details");
+        // }
+        // const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
+
+        try {
+            // First attempt with youtubei
+            const youtube = new Client();
+            const video = await youtube.getVideo(extractedId);
+            
+            if (video && video.title && video.thumbnails && video.thumbnails.length > 0) {
+                // If successful, use the data from youtubei
+                videoTitle = video.title ?? uuidv4();
+                const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
+                
+                if (thumbnails.length > 1) {
+                    smallImgUrl = thumbnails[Math.max(0, thumbnails.length - 2)].url;
+                }
+                
+                bigImgUrl = thumbnails[thumbnails.length - 1].url;
+            }
+        } catch (apiError) {
+            console.log("YouTube API error:", apiError);
+            // Fallback to direct URL construction - no API needed
+            // These URLs should work for most YouTube videos
         }
-        const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
-
 
         console.log("user - 1")
         const existingActiveStream = await prismaClient.stream.count({
@@ -98,9 +124,9 @@ export async function POST(req: NextRequest) {
               url: data.url,
               extractedId,
               type: "Youtube",
-              title: video.title ?? "Unknown title",
-              smallImg: thumbnails[Math.max(0, thumbnails.length - 2)].url,
-              bigImg: thumbnails[thumbnails.length - 1].url
+              title: videoTitle,
+                smallImg: smallImgUrl,
+                bigImg: bigImgUrl
             }
           });
 
@@ -183,4 +209,10 @@ export async function GET(req: NextRequest) {
         activeStream
     })
 }
- 
+function uuidv4(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}
