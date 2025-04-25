@@ -8,6 +8,7 @@ import { YT_REGEX } from "@/app/lib/utils";
 import { getServerSession } from "next-auth";
 import prismaClient from "@/app/lib/db";
 import { authOptions } from "@/app/lib/auth";
+import { Client } from "youtubei";
 
 const CreateStreamSchema = z.object({
     creatorId: z.string(),
@@ -31,13 +32,26 @@ export async function POST(req: NextRequest) {
 
         const extractedId = data.url.split("?v=")[1];
         //TODO : add only if stream is not present? optional
-        const res = await youtubesearchapi.GetVideoDetails(extractedId);
-        console.log(res); 
-        console.log("===========")
-        console.log(res.thumbnail);
-        const thumbnails = await res.thumbnail.thumbnails;
-        console.log(thumbnails);
-        thumbnails.sort((a: {width: number}, b: {width: number}) => a.width < b.width ? -1 : 1);
+        // const res = await youtubesearchapi.GetVideoDetails(extractedId);
+        // console.log(res); 
+        // console.log("===========")
+        // console.log(res.thumbnail);
+        // const thumbnails = await res.thumbnail.thumbnails;
+        // console.log(thumbnails);
+        // thumbnails.sort((a: {width: number}, b: {width: number}) => a.width < b.width ? -1 : 1);
+
+
+        //using youtubei for gettiing the video deatils 
+         // safer extraction via regex
+        const youtube = new Client();               // initialize InnerTube
+        const video = await youtube.getVideo(extractedId);  // fetch details :contentReference[oaicite:3]{index=3}
+
+        // sort thumbnails by width ascending
+        if (!video) {
+            throw new Error("Failed to fetch video details");
+        }
+        const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
+
 
         console.log("user - 1")
         const existingActiveStream = await prismaClient.stream.count({
@@ -64,18 +78,31 @@ export async function POST(req: NextRequest) {
         // console.log(data.creatorId); 
 
         console.log("user- 2");
+        // const stream = await prismaClient.stream.create({
+        //     data: {
+        //         addedById : data.creatorId, 
+        //         userId: data.creatorId,
+        //         url: data.url,
+        //         extractedId,
+        //         type: "Youtube",
+        //         title: res.title ?? "Cant find video",
+        //         smallImg: (thumbnails.length > 1 ? thumbnails[thumbnails.length - 2].url : thumbnails[thumbnails.length - 1].url) ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
+        //         bigImg: thumbnails[thumbnails.length - 1].url ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
+        //     }
+        // });
+
         const stream = await prismaClient.stream.create({
             data: {
-                addedById : data.creatorId, 
-                userId: data.creatorId,
-                url: data.url,
-                extractedId,
-                type: "Youtube",
-                title: res.title ?? "Cant find video",
-                smallImg: (thumbnails.length > 1 ? thumbnails[thumbnails.length - 2].url : thumbnails[thumbnails.length - 1].url) ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg",
-                bigImg: thumbnails[thumbnails.length - 1].url ?? "https://cdn.pixabay.com/photo/2024/02/28/07/42/european-shorthair-8601492_640.jpg"
+              addedById: data.creatorId,
+              userId: data.creatorId,
+              url: data.url,
+              extractedId,
+              type: "Youtube",
+              title: video.title ?? "Unknown title",
+              smallImg: thumbnails[Math.max(0, thumbnails.length - 2)].url,
+              bigImg: thumbnails[thumbnails.length - 1].url
             }
-        });
+          });
 
         console.log("user- 3")
         return NextResponse.json({
