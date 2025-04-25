@@ -17,8 +17,9 @@ const CreateStreamSchema = z.object({
 const MAX_QUEUE_LEN = 20;
 
 export async function POST(req: NextRequest) {
-    try {
+    try {   
         const data = CreateStreamSchema.parse(await req.json());
+        console.log(data)
         const isYt = data.url.match(YT_REGEX)
         if (!isYt) {
             return NextResponse.json({
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
         const thumbnails = res.thumbnail.thumbnails;
         thumbnails.sort((a: {width: number}, b: {width: number}) => a.width < b.width ? -1 : 1);
 
+        console.log("user - 1")
         const existingActiveStream = await prismaClient.stream.count({
             where: {
                 userId: data.creatorId
@@ -57,6 +59,8 @@ export async function POST(req: NextRequest) {
         // const userId = getUserIdFromEmail?.id ?? ""
         // console.log("=0======000000000000===========00000000000000")
         // console.log(data.creatorId); 
+
+        console.log("user- 2");
         const stream = await prismaClient.stream.create({
             data: {
                 addedById : data.creatorId, 
@@ -70,6 +74,7 @@ export async function POST(req: NextRequest) {
             }
         });
 
+        console.log("user- 3")
         return NextResponse.json({
             ...stream,
             hasUpvoted: false,
