@@ -8,7 +8,7 @@ import { YT_REGEX } from "@/app/lib/utils";
 import { getServerSession } from "next-auth";
 import prismaClient from "@/app/lib/db";
 import { authOptions } from "@/app/lib/auth";
-import { Client } from "youtubei";
+// import { Client } from "youtubei";
 
 const CreateStreamSchema = z.object({
     creatorId: z.string(),
@@ -32,9 +32,30 @@ export async function POST(req: NextRequest) {
 
         const extractedId = data.url.split("?v=")[1];
 
+        const ytApiKey = process.env.YT_API_KEY;
+        const ytApiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${extractedId}&key=${ytApiKey}`;
         let videoTitle = "Unknown Video";
         let smallImgUrl = `https://img.youtube.com/vi/${extractedId}/hqdefault.jpg`;
         let bigImgUrl = `https://img.youtube.com/vi/${extractedId}/maxresdefault.jpg`;
+
+        try {
+            const ytRes = await fetch(ytApiUrl);
+            const ytData = await ytRes.json();
+            if (ytData.items && ytData.items.length > 0) {
+                const snippet = ytData.items[0].snippet;
+                videoTitle = snippet.title || videoTitle;
+                // Prefer maxres, fallback to high, then medium, then default
+                const thumbs = snippet.thumbnails;
+                bigImgUrl = thumbs.maxres?.url || thumbs.high?.url || thumbs.medium?.url || thumbs.default?.url || bigImgUrl;
+                smallImgUrl = thumbs.high?.url || thumbs.medium?.url || thumbs.default?.url || smallImgUrl;
+            }
+        } catch (err) {
+            console.log("YouTube v3 API error:", err);
+        }
+
+        // let videoTitle = "Unknown Video";
+        // let smallImgUrl = `https://img.youtube.com/vi/${extractedId}/hqdefault.jpg`;
+        // let bigImgUrl = `https://img.youtube.com/vi/${extractedId}/maxresdefault.jpg`;
         
         //TODO : add only if stream is not present? optional
         // const res = await youtubesearchapi.GetVideoDetails(extractedId);
@@ -57,27 +78,26 @@ export async function POST(req: NextRequest) {
         // }
         // const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
 
-        try {
-            // First attempt with youtubei
-            const youtube = new Client();
-            const video = await youtube.getVideo(extractedId);
-            
-            if (video && video.title && video.thumbnails && video.thumbnails.length > 0) {
-                // If successful, use the data from youtubei
-                videoTitle = video.title ?? uuidv4();
-                const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
+        // try {
+        //     // First attempt with youtubei
+        //     const youtube = new Client();
+        //     const video = await youtube.getVideo(extractedId);
+        //     if (video && video.title && video.thumbnails && video.thumbnails.length > 0) {
+        //         // If successful, use the data from youtubei
+        //         videoTitle = video.title ?? uuidv4();
+        //         const thumbnails = video.thumbnails.sort((a, b) => a.width - b.width);
                 
-                if (thumbnails.length > 1) {
-                    smallImgUrl = thumbnails[Math.max(0, thumbnails.length - 2)].url;
-                }
+        //         if (thumbnails.length > 1) {
+        //             smallImgUrl = thumbnails[Math.max(0, thumbnails.length - 2)].url;
+        //         }
                 
-                bigImgUrl = thumbnails[thumbnails.length - 1].url;
-            }
-        } catch (apiError) {
-            console.log("YouTube API error:", apiError);
-            // Fallback to direct URL construction - no API needed
-            // These URLs should work for most YouTube videos
-        }
+        //         bigImgUrl = thumbnails[thumbnails.length - 1].url;
+        //     }
+        // } catch (apiError) {
+        //     console.log("YouTube API error:", apiError);
+        //     // Fallback to direct URL construction - no API needed
+        //     // These URLs should work for most YouTube videos
+        // }
 
         console.log("user - 1")
         const existingActiveStream = await prismaClient.stream.count({
@@ -209,10 +229,10 @@ export async function GET(req: NextRequest) {
         activeStream
     })
 }
-function uuidv4(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
+// function uuidv4(): string {
+//     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+//         const r = (Math.random() * 16) | 0;
+//         const v = c === 'x' ? r : (r & 0x3) | 0x8;
+//         return v.toString(16);
+//     });
+// }
